@@ -7,6 +7,7 @@ const UserSchema = new Schema({
     password: {
         type: String, 
     },
+    image: {type: String},
 }, {timestamps: true})
 
 export const User = models?.User || model('User', UserSchema)
