@@ -1,14 +1,13 @@
-import { NextResponse } from "next/server";
-import { User } from "@/models/User";
-import mongoose from "mongoose";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
 import GoogleProvider from "next-auth/providers/google";
+import bcrypt from "bcrypt";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@/libs/mongoConnect";
+import { User } from "@/models/User";
+import mongoose from "mongoose";
 
-export const authOptions = {
+const authOptions = {
   secret: process.env.SECRET,
   adapter: MongoDBAdapter(clientPromise),
   providers: [
@@ -40,8 +39,11 @@ export const authOptions = {
   ],
 };
 
-const handler = NextAuth(authOptions);
+// Используем **асинхронный API-обработчик** для App Router (Next.js 13+)
+export const POST = async (req) => {
+  return NextAuth(authOptions)(req);
+};
 
-// **Новый экспорт для App Router (Next.js 13+)**
-export const GET = (req) => handler(req, NextResponse);
-export const POST = (req) => handler(req, NextResponse);
+export const GET = async (req) => {
+  return NextAuth(authOptions)(req);
+};
