@@ -8,7 +8,7 @@ import { User } from "@/models/User";
 import mongoose from "mongoose";
 import { debug } from "console";
 
-const authOptions = {
+export const authOptions = {
   secret: process.env.SECRET,
   adapter: MongoDBAdapter(clientPromise),
   debug: true,
