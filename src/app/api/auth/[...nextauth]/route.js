@@ -1,51 +1,46 @@
-import NextAuth from "next-auth";
+import clientPromise from "@/libs/mongoConnect";
+import {UserInfo} from "@/models/UserInfo";
+import bcrypt from "bcrypt";
+import * as mongoose from "mongoose";
+import {User} from '@/models/User';
+import NextAuth, {getServerSession} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import bcrypt from "bcrypt";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import clientPromise from "@/libs/mongoConnect";
-import { User } from "@/models/User";
-import mongoose from "mongoose";
-import { debug } from "console";
+import { MongoDBAdapter } from "@auth/mongodb-adapter"
 
 export const authOptions = {
   secret: process.env.SECRET,
   adapter: MongoDBAdapter(clientPromise),
-  debug: true,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
     CredentialsProvider({
-      name: "Credentials",
-      id: "credentials",
+      name: 'Credentials',
+      id: 'credentials',
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "test@example.com" },
+        username: { label: "Email", type: "email", placeholder: "test@example.com" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+      async authorize(credentials, req) {
+        const email = credentials?.email;
+        const password = credentials?.password;
 
-        await mongoose.connect(process.env.MONGO_URL);
-        const user = await User.findOne({ email: credentials.email });
+        mongoose.connect(process.env.MONGO_URL);
+        const user = await User.findOne({email});
+        const passwordOk = user && bcrypt.compareSync(password, user.password);
 
-        if (!user) return null;
+        if (passwordOk) {
+          return user;
+        }
 
-        const passwordOk = bcrypt.compareSync(credentials.password, user.password);
-        if (!passwordOk) return null;
-
-        return user;
-      },
-    }),
+        return null
+      }
+    })
   ],
 };
 
-// Используем **асинхронный API-обработчик** для App Router (Next.js 13+)
-export const POST = async (req) => {
-  return NextAuth(authOptions)(req);
-};
+const handler = NextAuth(authOptions);
 
-export const GET = async (req) => {
-  return NextAuth(authOptions)(req);
-};
+export { handler as GET, handler as POST }
