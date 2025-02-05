@@ -6,10 +6,12 @@ import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@/libs/mongoConnect";
 import { User } from "@/models/User";
 import mongoose from "mongoose";
+import { debug } from "console";
 
 const authOptions = {
   secret: process.env.SECRET,
   adapter: MongoDBAdapter(clientPromise),
+  debug: true,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
