@@ -5,6 +5,7 @@ import UserTabs from "@/components/layout/UserTabs"
 import { redirect } from "next/navigation"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
+import EditableImage from "@/components/layout/EditableImage"
 
 export default function ProfilePage(){
 
@@ -77,31 +78,6 @@ export default function ProfilePage(){
         })
     }
 
-    async function handleFileChange(ev){
-        const files = ev.target.files;
-        if(files?.length === 1){
-            const data = new FormData;
-            data.set('file', files[0]);
-            
-            const uploadPromise = fetch('/api/upload',{
-                method: 'POST',
-                body: data,
-            }).then(response => {
-                if(response.ok){
-                    return response.json().then(link => {
-                        setImage(link)
-                    })
-                }
-                throw new Error('Failed to upload')
-            })
-            await toast.promise(uploadPromise, {
-                loading: 'Uploading...',
-                success: 'Uploaded',
-                error: 'Failed to upload',
-            })
-        }
-    }
-
     return(
         <section className="mt-8">
             <UserTabs isAdmin={isAdmin}></UserTabs>
@@ -109,13 +85,7 @@ export default function ProfilePage(){
                 <div className="flex gap-4">
                     <div>
                         <div className="p-2 max-w-[120px] rounded-lg relative">
-                            {image && (
-                                <Image className="rounded-lg w-full h-full mb-1" src={image} width={250} height={250} alt="avatar"></Image>
-                            )}
-                            <label>
-                                <input type="file" className="hidden" onChange={handleFileChange}></input>
-                                <span className="border rounded-lg p-2 text-center border-gray-300 cursor-pointer block">Edit</span>
-                            </label>
+                            <EditableImage link={image} setLink={setImage}></EditableImage>
                         </div>
                     </div>
                     <form className="grow" onSubmit={handleProfileInfoUpdate}>
