@@ -9,7 +9,7 @@ import { MongoDBAdapter } from "@auth/mongodb-adapter";
 
 export const authOptions = {
   secret: process.env.SECRET,
-  adapter: MongoDBAdapter(clientPromise),
+  // adapter: MongoDBAdapter(clientPromise), // Временно закомментируй
   session: { strategy: "jwt" },
   providers: [
     GoogleProvider({
