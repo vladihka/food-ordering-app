@@ -1,5 +1,3 @@
-// auth/[...nextauth]/route.js
-
 import { User } from "@/models/User";
 import mongoose from "mongoose";
 import NextAuth from "next-auth";
@@ -29,10 +27,10 @@ const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const email = credentials?.email;
+        const email = credentials?.username;
         const password = credentials?.password;
 
-        mongoose.connect(process.env.MONGO_URL);
+        await mongoose.connect(process.env.MONGO_URL);
         const user = await User.findOne({ email });
         const passwordOk = user && bcrypt.compareSync(password, user.password);
 
