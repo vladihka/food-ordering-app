@@ -1,7 +1,12 @@
 import Plus from "../icons/Plus";
 import Trash from "../icons/Trash";
+import ChevronUp from "../icons/ChevronDown";
+import ChevronDown from "../icons/ChevronDown";
+import { useState } from "react";
 
-export default function MenuItemPriceProps({props, setProps}) {
+export default function MenuItemPriceProps({name, addLabel, props, setProps}) {
+
+    const [isOpen, setIsOpen] = useState(false);
 
     function addProp(){
         setProps(oldProps => {
@@ -24,11 +29,24 @@ export default function MenuItemPriceProps({props, setProps}) {
 
     return(
         <div className="bg-gray-200 p-2 rounded-md mb-2">
-            <label>Sizes</label>
+            <button 
+                onClick={() => setIsOpen(!isOpen)}
+                type="button" 
+                className="inline-flex p-1 border-0 justify-start">
+                {isOpen && (
+                    <ChevronUp></ChevronUp>
+                )}
+                {!isOpen && (
+                    <ChevronDown></ChevronDown>
+                )}
+                <span>{name}</span>
+                <span>({props?.length})</span>
+        </button>
+        <div className={isOpen ? 'block' : 'hidden'}>
             {props?.length > 0 && props.map((size, index) => (
                 <div key={index} className="flex items-end gap-2">
                     <div>
-                        <label>Size name</label>
+                        <label>Name</label>
                         <input 
                             type="text" 
                             placeholder="Size name" 
@@ -54,11 +72,12 @@ export default function MenuItemPriceProps({props, setProps}) {
                             </button>
                         </div>
                     </div>
-            ))}
-            <button onClick={addProp} type="button" className="bg-white items-center">
-                <Plus></Plus>
-                Add item size
-            </button>
+                ))}
+                <button onClick={addProp} type="button" className="bg-white items-center">
+                    <Plus></Plus>
+                    <span>{addLabel}</span>
+                </button>
+            </div>
         </div>
     )
 }

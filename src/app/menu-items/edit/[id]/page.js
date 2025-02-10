@@ -7,6 +7,7 @@ import Link from "next/link";
 import Left from "@/components/icons/Left";
 import { redirect, useParams } from "next/navigation";
 import MenuItemForm from "@/components/layout/MenuItemForm";
+import DeleteButton from "@/components/DeleteButton"
 
 export default function EditMenuItemPage() {
 
@@ -61,11 +62,33 @@ export default function EditMenuItemPage() {
     if(!data.admin){
         return 'Not an admin'
     }
+
+    async function handleDeleteClick(){
+        const promise = new Promise(async (resolve, reject) => {
+            const res = await fetch('/api/menu-items?_id='+id,{
+                method: 'DELETE'
+            })
+            if(res.ok){
+                resolve()
+            }
+            else{
+                reject()
+            }
+
+            await toast.promise(promise, {
+                loading: 'Deleting...',
+                success: 'Deleted',
+                error: 'Error'
+            })
+
+            setRedirectToItems(true);
+        })
+    }
  
     return(
         <section className="mt-8">
             <UserTabs isAdmin={true}></UserTabs>
-            <div className="max-w-md mx-auto mt-8">
+            <div className="max-w-2xl mx-auto mt-8">
                 <Link 
                     className="button" 
                     href={'/menu-items'}>
@@ -74,6 +97,14 @@ export default function EditMenuItemPage() {
                 </Link>
             </div>
             <MenuItemForm menuItem={menuItem} onSubmit={handleFormSubmit}></MenuItemForm>
+            <div className="max-w-md mx-auto mt-2">
+                <div className="max-w-xs ml-auto pl-3">
+                    <DeleteButton 
+                        label="Delete this menu item"
+                        onDelete={handleDeleteClick}
+                    ></DeleteButton>
+                </div>
+            </div>
         </section>
     )
 }

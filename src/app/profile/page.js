@@ -6,32 +6,21 @@ import { redirect } from "next/navigation"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import EditableImage from "@/components/layout/EditableImage"
+import UserForm from "@/components/layout/UserForm"
 
 export default function ProfilePage(){
 
     const session = useSession()
     const {status} = session
-    const [image, setImage] = useState('')
-    const [userName, setUserName] = useState('')
-    const [phone, setPhone] = useState('')
-    const [streetAddress, setStreetAddress] = useState('')
-    const [postalCode, setPostalCode] = useState('')
-    const [city, setCity] = useState('')
-    const [country, setCountry] = useState('')
+    const [user, setUser] = useState(null)
     const [isAdmin, setIsAdmin] = useState(false)
     const [profileFetched, setProfileFetched] = useState(false)
 
     useEffect(() => {
         if(status === 'authenticated'){
-            setUserName(session.data.user.name)
-            setImage(session.data.user.image)
             fetch('/api/profile').then(response => {
                 response.json().then(data => {
-                    setPhone(data.phone)
-                    setStreetAddress(data.streetAddress)
-                    setPostalCode(data.postalCode)
-                    setCity(data.city)
-                    setCountry(data.country)
+                    setUser(data)
                     setIsAdmin(data.admin)
                     setProfileFetched(true)
                 })
@@ -47,21 +36,13 @@ export default function ProfilePage(){
         redirect('/login')
     }
 
-    async function handleProfileInfoUpdate(ev){
+    async function handleProfileInfoUpdate(ev, data){
         ev.preventDefault()
         const savingPromise = new Promise(async(resolve, reject) => {
             const response = await fetch('/api/profile', {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    name:userName, 
-                    image,
-                    streetAddress,
-                    phone,
-                    postalCode,
-                    city,
-                    country,
-                }),
+                body: JSON.stringify(data),
             })
             if(response.ok){
                 resolve()
@@ -81,73 +62,8 @@ export default function ProfilePage(){
     return(
         <section className="mt-8">
             <UserTabs isAdmin={isAdmin}></UserTabs>
-            <div className="max-w-md mx-auto mt-8">
-                <div className="flex gap-4">
-                    <div>
-                        <div className="p-2 max-w-[120px] rounded-lg relative">
-                            <EditableImage link={image} setLink={setImage}></EditableImage>
-                        </div>
-                    </div>
-                    <form className="grow" onSubmit={handleProfileInfoUpdate}>
-                        <label>
-                            First and last name
-                        </label>
-                        <input 
-                            type="text" 
-                            placeholder="First and last name"
-                            value={userName}
-                            onChange={ev => setUserName(ev.target.value)}></input>
-                        <label>Email</label>
-                        <input 
-                            type="email" 
-                            disabled={true} 
-                            value={session.data.user.email}
-                            placeholder="email"
-                        ></input>
-                        <label>Phone</label>
-                        <input 
-                            type="tel" 
-                            value={phone}
-                            onChange={ev => setPhone(ev.target.value)}
-                            placeholder="Phone number"
-                        ></input>
-                        <label>Street address</label>
-                        <input 
-                            type="text" 
-                            value={streetAddress}
-                            onChange={ev => setStreetAddress(ev.target.value)}
-                            placeholder="Street address"
-                        ></input>
-                        <div className="flex gap-2">
-                            <div>
-                                <label>Postal code</label>
-                                <input 
-                                    type="text" 
-                                    value={postalCode}
-                                    onChange={ev => setPostalCode(ev.target.value)}
-                                    placeholder="Postal code"
-                                ></input>
-                            </div>
-                            <div>
-                                <label>City</label>
-                                <input 
-                                    type="text" 
-                                    value={city}
-                                    onChange={ev => setCity(ev.target.value)}
-                                    placeholder="City"
-                                ></input>
-                            </div>
-                        </div>
-                        <label>Country</label>
-                        <input 
-                            type="text" 
-                            value={country}
-                            onChange={ev => setCountry(ev.target.value)}
-                            placeholder="Country"
-                        ></input>
-                        <button type="submit">Save</button>
-                    </form>
-                </div>
+            <div className="max-w-2xl mx-auto mt-8">
+                <UserForm user={user} onSave={handleProfileInfoUpdate}></UserForm>
             </div>
         </section>
     )
