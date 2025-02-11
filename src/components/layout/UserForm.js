@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import EditableImage from "./EditableImage"
+import { useProfile } from "../UseProfile"
 
 export default function UserForm({user, onSave}){
 
@@ -12,6 +13,8 @@ export default function UserForm({user, onSave}){
     const [postalCode, setPostalCode] = useState(user?.postalCode || '')
     const [city, setCity] = useState(user?.city || '')
     const [country, setCountry] = useState(user?.country || '')
+    const [admin, setAdmin] = useState(user?.admin || false)
+    const {data:loggedInUserData} = useProfile()
 
     return(
         <div className="flex gap-4">
@@ -23,7 +26,7 @@ export default function UserForm({user, onSave}){
             <form 
                 className="grow" 
                 onSubmit={ev => onSave(ev, {
-                    user:userName, image, phone, streetAddress, city, postalCode
+                    name:userName, image, phone, streetAddress, city, postalCode, admin
                 })}
             >
                 <label>
@@ -55,7 +58,7 @@ export default function UserForm({user, onSave}){
                     onChange={ev => setStreetAddress(ev.target.value)}
                     placeholder="Street address"
                 ></input>
-                <div className="flex gap-2">
+                <div className="grid grid-cols-2 gap-2">
                     <div>
                         <label>Postal code</label>
                         <input 
@@ -82,6 +85,20 @@ export default function UserForm({user, onSave}){
                     onChange={ev => setCountry(ev.target.value)}
                     placeholder="Country"
                 ></input>
+                {loggedInUserData.admin && (
+                    <div>
+                        <label className="p-2 inline-flex items-center gap-2 mb-2" htmlFor="adminCb">
+                            <input 
+                            value={'1'} 
+                            checked={admin} 
+                            onClick={ev => setAdmin(ev.target.checked)} 
+                            id="adminCb" 
+                            className="" 
+                            type="checkbox"></input>
+                            <span>Admin</span>
+                        </label>
+                    </div>
+                )}
                 <button type="submit">Save</button>
             </form>
         </div>

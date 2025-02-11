@@ -28,14 +28,6 @@ export default function ProfilePage(){
     )}
     }, [session, status])
 
-    if(status === 'loading' || !profileFetched){
-        return 'Loading...'
-    }
-
-    if(status === 'unauthenticated'){
-        redirect('/login')
-    }
-
     async function handleProfileInfoUpdate(ev, data){
         ev.preventDefault()
         const savingPromise = new Promise(async(resolve, reject) => {
@@ -57,6 +49,14 @@ export default function ProfilePage(){
             success: 'Saved',
             error: 'Failed to save',
         })
+    }
+
+    if(status === 'loading' || !profileFetched){
+        return 'Loading...'
+    }
+
+    if(status === 'unauthenticated'){
+        redirect('/login')
     }
 
     return(
