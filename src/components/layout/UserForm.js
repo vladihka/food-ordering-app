@@ -3,6 +3,7 @@
 import { useState } from "react"
 import EditableImage from "./EditableImage"
 import { useProfile } from "../UseProfile"
+import AddressInputs from "./AddressInputs"
 
 export default function UserForm({user, onSave}){
 
@@ -15,6 +16,14 @@ export default function UserForm({user, onSave}){
     const [country, setCountry] = useState(user?.country || '')
     const [admin, setAdmin] = useState(user?.admin || false)
     const {data:loggedInUserData} = useProfile()
+
+    function handleAddressChange(propName, value){
+        if(propName === 'phone') setPhone(value)
+        if(propName === 'streetAdddress') setStreetAddress(value)
+        if(propName === 'postalCode') setPostalCode(value)
+        if(propName === 'city') setCity(value)
+        if(propName === 'country') setCountry(value)
+    }
 
     return(
         <div className="flex gap-4">
@@ -44,53 +53,17 @@ export default function UserForm({user, onSave}){
                     value={user.email}
                     placeholder="email"
                 ></input>
-                <label>Phone</label>
-                <input 
-                    type="tel" 
-                    value={phone}
-                    onChange={ev => setPhone(ev.target.value)}
-                    placeholder="Phone number"
-                ></input>
-                <label>Street address</label>
-                <input 
-                    type="text" 
-                    value={streetAddress}
-                    onChange={ev => setStreetAddress(ev.target.value)}
-                    placeholder="Street address"
-                ></input>
-                <div className="grid grid-cols-2 gap-2">
-                    <div>
-                        <label>Postal code</label>
-                        <input 
-                            type="text" 
-                            value={postalCode}
-                            onChange={ev => setPostalCode(ev.target.value)}
-                            placeholder="Postal code"
-                        ></input>
-                    </div>
-                    <div>
-                        <label>City</label>
-                        <input 
-                            type="text" 
-                            value={city}
-                            onChange={ev => setCity(ev.target.value)}
-                            placeholder="City"
-                        ></input>
-                    </div>
-                </div>
-                <label>Country</label>
-                <input 
-                    type="text" 
-                    value={country}
-                    onChange={ev => setCountry(ev.target.value)}
-                    placeholder="Country"
-                ></input>
+                <AddressInputs 
+                    adressProps={{phone, streetAddress, postalCode, city, country}}
+                    setAddressProp={handleAddressChange}>
+                </AddressInputs>
                 {loggedInUserData.admin && (
                     <div>
                         <label className="p-2 inline-flex items-center gap-2 mb-2" htmlFor="adminCb">
                             <input 
                             value={'1'} 
                             checked={admin} 
+                            onChange={()=>{}}
                             onClick={ev => setAdmin(ev.target.checked)} 
                             id="adminCb" 
                             className="" 
