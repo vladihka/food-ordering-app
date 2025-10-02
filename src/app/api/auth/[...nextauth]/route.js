@@ -2,8 +2,8 @@ import { User } from "@/models/User";
 import mongoose from "mongoose";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from 'bcrypt'
-import GoogleProvider from "next-auth/providers/google"
+import bcrypt from 'bcrypt';
+import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@/libs/mongoConnect";
 
@@ -19,7 +19,7 @@ export const authOptions = {
       name: "Credentials",
       id: "credentials",
       credentials: {
-        username: {
+        email: {
           label: "Email",
           type: "email",
           placeholder: "test@example.com",
@@ -30,20 +30,21 @@ export const authOptions = {
         const email = credentials?.email;
         const password = credentials?.password;
 
-        mongoose.connect(process.env.MONGO_URL)
-        const user = await User.findOne({email});
-        const passwordOk = user && bcrypt.compareSync(password, user.password)
+        await mongoose.connect(process.env.MONGO_URL);
 
-        if(passwordOk){
-          return user
+        const user = await User.findOne({ email });
+
+        const passwordOk = user && bcrypt.compareSync(password, user.password);
+
+        if (passwordOk) {
+          return user;
         }
 
         return null;
       },
     }),
   ],
-}
+};
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };
