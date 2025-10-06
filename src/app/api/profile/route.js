@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { User } from "@/models/User";
 import { UserInfo } from "@/models/UserInfo";
-import { authOptions } from "../auth/[...nextauth]/route";
+import authOptions from "@/libs/authOptions";
 
 export async function PUT(req) {
     mongoose.connect(process.env.MONGO_URL);
@@ -14,7 +14,10 @@ export async function PUT(req) {
         filter = {_id};
     } else {
         const session = await getServerSession(authOptions);
-        const email = session.user.email;
+        const email = session?.user?.email;
+        if (!email) {
+            return new Response("Unauthorized", { status: 401 });
+        }
         filter = {email};
     }
 
