@@ -19,7 +19,7 @@ export default function UserForm({user, onSave}){
 
     function handleAddressChange(propName, value){
         if(propName === 'phone') setPhone(value)
-        if(propName === 'streetAdddress') setStreetAddress(value)
+        if(propName === 'streetAddress') setStreetAddress(value)
         if(propName === 'postalCode') setPostalCode(value)
         if(propName === 'city') setCity(value)
         if(propName === 'country') setCountry(value)
@@ -35,7 +35,7 @@ export default function UserForm({user, onSave}){
             <form 
                 className="grow" 
                 onSubmit={ev => onSave(ev, {
-                    name:userName, image, phone, streetAddress, city, postalCode, admin
+                    name:userName, image, phone, streetAddress, city, postalCode, admin, country
                 })}
             >
                 <label>

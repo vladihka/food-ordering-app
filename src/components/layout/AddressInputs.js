@@ -33,7 +33,7 @@ export default function AddressInputs({adressProps, setAddressProp}){
                         <input 
                             type="text" 
                             value={city}
-                            onChange={ev => setAddressProp('city',ev.target.value)}s
+                            onChange={ev => setAddressProp('city',ev.target.value)}
                             placeholder="City"
                         ></input>
                     </div>
