@@ -9,6 +9,8 @@ import bcrypt from "bcrypt";
 const authOptions = {
   secret: process.env.SECRET,
   adapter: MongoDBAdapter(clientPromise),
+  session: { strategy: "jwt" },
+  pages: { signIn: "/login" },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -26,15 +28,34 @@ const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const email = credentials?.email;
-        const password = credentials?.password;
+        const email = credentials?.email?.toLowerCase();
+        const password = credentials?.password || "";
 
         await mongoose.connect(process.env.MONGO_URL);
 
-        const user = await User.findOne({ email });
+        // Case-insensitive email lookup to support legacy mixed-case records
+        const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const user =
+          (await User.findOne({ email })) ||
+          (await User.findOne({ email: { $regex: `^${escapeRegex(email)}$`, $options: "i" } }));
 
-        if (user && bcrypt.compareSync(password, user.password)) {
-          return user;
+        if (!user || !user.password) {
+          return null;
+        }
+
+        try {
+          const passwordMatches = bcrypt.compareSync(password, user.password);
+          if (passwordMatches) {
+            // Return a plain object with an id so NextAuth accepts it
+            return {
+              id: String(user._id),
+              name: user.name,
+              email: user.email,
+              image: user.image,
+            };
+          }
+        } catch (_e) {
+          return null;
         }
 
         return null;

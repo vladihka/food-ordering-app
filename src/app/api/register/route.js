@@ -7,7 +7,12 @@ export async function POST(req){
     mongoose.connect(process.env.MONGO_URL);
     const pass = body.password
     if(!pass?.length || pass.length < 5){
-        new Error('password musdt be at least 5 characters')
+        return new Response('Password must be at least 5 characters', { status: 400 })
+    }
+
+    // normalize email for consistent login (credentials + providers)
+    if (body.email) {
+        body.email = String(body.email).toLowerCase().trim()
     }
 
     const notHashedPassword = pass;
