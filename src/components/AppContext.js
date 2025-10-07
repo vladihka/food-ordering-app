@@ -1,6 +1,6 @@
 'use client';
-import {SessionProvider} from "next-auth/react";
-import {createContext, useEffect, useState} from "react";
+import {SessionProvider, useSession} from "next-auth/react";
+import {createContext, useEffect, useState, useCallback} from "react";
 import toast from "react-hot-toast";
 
 export const CartContext = createContext({});
@@ -18,8 +18,9 @@ export function cartProductPrice(cartProduct) {
     return price;
 }
 
-export function AppProvider({children}) {
+function CartProvider({children}) {
     const [cartProducts,setCartProducts] = useState([]);
+    const { status } = useSession();
 
     const ls = typeof window !== 'undefined' ? window.localStorage : null;
 
@@ -29,12 +30,28 @@ export function AppProvider({children}) {
         }
     }, []);
 
-    function clearCart() {
+    // Clear cart when user logs out
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            setCartProducts([]);
+            if (ls) {
+                ls.removeItem('cart');
+            }
+        }
+    }, [status, ls]);
+
+  const saveCartProductsToLocalStorage = useCallback((cartProducts) => {
+    if (ls) {
+        ls.setItem('cart', JSON.stringify(cartProducts));
+    }
+  }, [ls]);
+
+    const clearCart = useCallback(() => {
         setCartProducts([]);
         saveCartProductsToLocalStorage([]);
-  }
+    }, [saveCartProductsToLocalStorage]);
 
-  function removeCartProduct(indexToRemove) {
+  const removeCartProduct = useCallback((indexToRemove) => {
         setCartProducts(prevCartProducts => {
         const newCartProducts = prevCartProducts
             .filter((v,index) => index !== indexToRemove);
@@ -42,31 +59,33 @@ export function AppProvider({children}) {
             return newCartProducts;
         });
         toast.success('Product removed');
-  }
+  }, [saveCartProductsToLocalStorage]);
 
-  function saveCartProductsToLocalStorage(cartProducts) {
-    if (ls) {
-        ls.setItem('cart', JSON.stringify(cartProducts));
-    }
-  }
-
-  function addToCart(product, size=null, extras=[]) {
+  const addToCart = useCallback((product, size=null, extras=[]) => {
         setCartProducts(prevProducts => {
             const cartProduct = {...product, size, extras};
             const newProducts = [...prevProducts, cartProduct];
             saveCartProductsToLocalStorage(newProducts);
             return newProducts;
         });
-  }
+  }, [saveCartProductsToLocalStorage]);
 
   return (
+    <CartContext.Provider value={{
+      cartProducts, setCartProducts,
+      addToCart, removeCartProduct, clearCart,
+    }}>
+      {children}
+    </CartContext.Provider>
+  );
+}
+
+export function AppProvider({children}) {
+  return (
     <SessionProvider>
-      <CartContext.Provider value={{
-        cartProducts, setCartProducts,
-        addToCart, removeCartProduct, clearCart,
-      }}>
+      <CartProvider>
         {children}
-      </CartContext.Provider>
+      </CartProvider>
     </SessionProvider>
   );
 }

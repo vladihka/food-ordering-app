@@ -11,7 +11,7 @@ export default function Header(){
   const status = session.status;
   const userData = session.data?.user;
   let userName = userData?.name || userData?.email;
-  const {cartProducts} = useContext(CartContext)
+  const {cartProducts, clearCart} = useContext(CartContext)
   if(userName && userName.includes(' ')){
     userName = userName.split(' ')[0];
   }
@@ -29,7 +29,10 @@ export default function Header(){
           {status === 'authenticated' && (
             <>
               <Link href={'/profile'} className="whitespace-nowrap">Hello, {userName}</Link>
-              <button onClick={() => signOut()} className="bg-primary text-white px-8 rounded-full py-2">Logout</button>
+              <button onClick={() => {
+                clearCart()
+                signOut()
+              }} className="bg-primary text-white px-8 rounded-full py-2">Logout</button>
             </>
           )}
           {status === 'unauthenticated' && (

@@ -6,6 +6,8 @@ import { useContext, useEffect, useState } from "react";
 import Trash from "@/components/icons/Trash"
 import AddressInputs from "@/components/layout/AddressInputs";
 import { useProfile } from "@/components/UseProfile";
+import { useSearchParams } from "next/navigation";
+import SuccessBox from "@/components/layout/SuccessBox";
 
 export default function CartPage(){
 
@@ -18,6 +20,8 @@ export default function CartPage(){
         country: ''
     })
     const {data:profileData} = useProfile()
+    const searchParams = useSearchParams()
+    const success = searchParams.get('success')
 
     let total = 0
 
@@ -33,6 +37,13 @@ export default function CartPage(){
             setAddress(addressFromProfile)
         }
     }, [profileData])
+
+    // Clear cart after successful payment
+    useEffect(() => {
+        if (success === '1') {
+            clearCart()
+        }
+    }, [success, clearCart])
 
     for (const p of cartProducts){
         total += cartProductPrice(p)
@@ -61,6 +72,14 @@ export default function CartPage(){
             <div className="text-center">
                 <SectionHeaders mainHeader="Cart"></SectionHeaders>
             </div>
+            {success === '1' && (
+                <div className="mt-4">
+                    <SuccessBox>
+                        <h2 className="text-lg font-semibold">Payment successful!</h2>
+                        <p>Your order has been placed and your cart has been cleared.</p>
+                    </SuccessBox>
+                </div>
+            )}
             <div className="grid mt-8 grid-cols-2 gap-8">
                 <div>
                     {cartProducts?.length === 0 && (
