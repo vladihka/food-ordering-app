@@ -2,15 +2,14 @@
 import { CartContext, cartProductPrice } from "../../components/AppContext";
 import SectionHeaders from "@/components/layout/SectionHeaders";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, Suspense } from "react";
 import Trash from "@/components/icons/Trash"
 import AddressInputs from "@/components/layout/AddressInputs";
 import { useProfile } from "@/components/UseProfile";
 import { useSearchParams } from "next/navigation";
 import SuccessBox from "@/components/layout/SuccessBox";
 
-export default function CartPage(){
-
+function CartContent(){
     const {cartProducts, removeCartProduct, clearCart} = useContext(CartContext)
     const [address, setAddress] = useState({
         phone: '',
@@ -136,5 +135,13 @@ export default function CartPage(){
                 </div>
             </div>
         </section>
+    )
+}
+
+export default function CartPage(){
+    return (
+        <Suspense fallback={<div className="text-center mt-8">Loading...</div>}>
+            <CartContent />
+        </Suspense>
     )
 }
