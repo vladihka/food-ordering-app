@@ -2,6 +2,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import Header from "../components/layout/Header";
 import {AppProvider} from "@/components/AppContext";
+import {ThemeProvider} from "@/components/ThemeContext";
 import { Toaster } from "react-hot-toast";
 
 const roboto = Roboto({subsets: ['latin'], weight: ['400', '500', '700']})
@@ -15,16 +16,18 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={roboto.className}>
-          <main className="max-w-4xl mx-auto p-4">
-            <AppProvider>
-              <Toaster></Toaster>
-              <Header></Header>
-              {children}
-              <footer className="border-t p-8 text-center text-gray-500 mt-16">
-                &copy; 2025 All rights reserved
-              </footer>
-            </AppProvider>
+        className={`${roboto.className} bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100`}>
+          <main className="max-w-4xl mx-auto p-2 sm:p-4 lg:p-6">
+              <AppProvider>
+                <ThemeProvider>
+                  <Toaster></Toaster>
+                  <Header></Header>
+                  {children}
+                  <footer className="border-t p-8 text-center text-gray-500 mt-16 dark:border-slate-700 dark:text-slate-400">
+                    &copy; 2025 All rights reserved
+                  </footer>
+                </ThemeProvider>
+              </AppProvider>
             </main> 
       </body>
     </html>

@@ -28,7 +28,7 @@ export default function MenuItemPriceProps({name, addLabel, props, setProps}) {
     }
 
     return(
-        <div className="bg-gray-200 p-2 rounded-md mb-2">
+        <div className="bg-gray-200 dark:bg-slate-800 p-2 rounded-md mb-2">
             <button 
                 onClick={() => setIsOpen(!isOpen)}
                 type="button" 
@@ -39,8 +39,8 @@ export default function MenuItemPriceProps({name, addLabel, props, setProps}) {
                 {!isOpen && (
                     <ChevronDown></ChevronDown>
                 )}
-                <span>{name}</span>
-                <span>({props?.length})</span>
+                <span className="dark:text-slate-100">{name}</span>
+                <span className="dark:text-slate-100">({props?.length})</span>
         </button>
         <div className={isOpen ? 'block' : 'hidden'}>
             {props?.length > 0 && props.map((size, index) => (
@@ -67,15 +67,15 @@ export default function MenuItemPriceProps({name, addLabel, props, setProps}) {
                             <button 
                                 onClick={() => removeProps(index)} 
                                 type="button" 
-                                className="bg-white mb-2 px-2">
+                                className="bg-white dark:bg-slate-600 mb-2 px-2 hover:bg-gray-100 dark:hover:bg-slate-500 transition-colors">
                                 <Trash></Trash>
                             </button>
                         </div>
                     </div>
                 ))}
-                <button onClick={addProp} type="button" className="bg-white items-center">
+                <button onClick={addProp} type="button" className="bg-white dark:bg-slate-600 items-center hover:bg-gray-100 dark:hover:bg-slate-500 transition-colors">
                     <Plus></Plus>
-                    <span>{addLabel}</span>
+                    <span className="dark:text-slate-100">{addLabel}</span>
                 </button>
             </div>
         </div>

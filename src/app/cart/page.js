@@ -80,58 +80,58 @@ export default function CartPage(){
                     </SuccessBox>
                 </div>
             )}
-            <div className="grid mt-8 grid-cols-2 gap-8">
+            <div className="grid mt-8 grid-cols-1 lg:grid-cols-2 gap-8">
                 <div>
                     {cartProducts?.length === 0 && (
-                        <div>No products in your shopping cart</div>
+                        <div className="text-gray-500 dark:text-slate-400">No products in your shopping cart</div>
                     )}
                     {cartProducts?.length > 0 && cartProducts.map((product, index) => (
-                        <div className="flex gap-4 mb-2 border-b py-2 items-center" key={product._id}>
-                            <div className="w-24">
-                                <Image width={240} height={240} alt="icon" src={product.image}></Image>
+                        <div className="flex gap-3 sm:gap-4 mb-2 border-b py-2 items-center dark:border-slate-700" key={product._id}>
+                            <div className="w-16 sm:w-20 md:w-24 flex-shrink-0">
+                                <Image width={240} height={240} alt="icon" src={product.image} className="w-full h-auto"></Image>
                             </div>
-                            <div className="grow">
-                                <h3 className="font-semibold">
+                            <div className="grow min-w-0">
+                                <h3 className="font-semibold dark:text-slate-100">
                                     {product.name}
                                 </h3>
                                 {product.size && (
-                                    <div className="text-sm">Size: <span>{product.size.name}</span></div>
+                                    <div className="text-sm dark:text-slate-300">Size: <span>{product.size.name}</span></div>
                                 )}
                                 {product.extras?.length > 0 && (
-                                    <div className="text-sm text-gray-500">
+                                    <div className="text-sm text-gray-500 dark:text-slate-400">
                                         {product.extras.map(extra => (
                                             <div>{extra.name} ${extra.price}</div>
                                         ))}
                                     </div>
                                 )}
                             </div>
-                            <div className="text-lg font-semibold">
+                            <div className="text-lg font-semibold dark:text-slate-100 flex-shrink-0">
                                 ${cartProductPrice(product)}
                             </div>
-                            <div className="ml-2">
+                            <div className="ml-2 flex-shrink-0">
                                 <button 
                                     type="button"
                                     onClick={() => removeCartProduct(index)}
-                                    className="p-2">
+                                    className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
                                     <Trash></Trash>
                                 </button>
                             </div>
                         </div>
                     ))}
-                    <div className="py-4 text-right pr-16">
-                        <span className="text-gray-500">
+                    <div className="py-4 text-right pr-4 sm:pr-16">
+                        <span className="text-gray-500 dark:text-slate-400">
                             Subtotal:
                         </span>
-                        <span className="text-lg font-semibold pl-2">
+                        <span className="text-lg font-semibold pl-2 dark:text-slate-100">
                             ${total}
                         </span>
                     </div>
                 </div>
-                <div className="bg-gray-100 p-4 rounded-lg">
-                    <h2>Checkout</h2>
+                <div className="bg-gray-100 dark:bg-slate-800 p-4 rounded-lg">
+                    <h2 className="dark:text-slate-100">Checkout</h2>
                     <form onSubmit={handleCheckout}>
                         <AddressInputs adressProps={address} setAddressProp={handleAddressChange}></AddressInputs>
-                        <button type="submit">Pay ${total}</button>
+                        <button type="submit" className="bg-primary text-white px-8 py-2 rounded-full hover:bg-primary/90 transition-colors">Pay ${total}</button>
                     </form>
                 </div>
             </div>

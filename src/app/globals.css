@@ -14,15 +14,18 @@ input[type="tel"],
 input[type="text"] {
   @apply block w-full mb-2 rounded-xl;
   @apply border p-2 border-gray-300 bg-gray-100;
+  @apply dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100;
 }
 input[type="email"]:disabled,
 input[type="password"]:disabled,
 input[type="tel"]:disabled,
 input[type="text"]:disabled {
   @apply bg-gray-300 border-0 cursor-not-allowed text-gray-500;
+  @apply dark:bg-slate-700 dark:text-slate-400;
 }
 label {
   @apply text-gray-500 text-sm leading-tight;
+  @apply dark:text-slate-400;
 }
 label + input {
   margin-top: -2px;
@@ -31,6 +34,7 @@ button,
 .button {
   @apply flex w-full justify-center gap-2 text-gray-700 font-semibold;
   @apply border border-gray-300 rounded-xl px-6 py-2;
+  @apply dark:text-slate-200 dark:border-slate-600;
 }
 button[type="submit"],
 .submit,
@@ -43,6 +47,7 @@ button[type="submit"]:disabled,
 }
 div.tabs > * {
   @apply bg-gray-300 text-gray-700 rounded-full py-2 px-4;
+  @apply dark:bg-slate-700 dark:text-slate-300;
 }
 div.tabs > *.active {
   @apply bg-primary text-white;

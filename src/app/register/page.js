@@ -36,11 +36,11 @@ export default function RegisterPage(){
                 Register
             </h1>
             {userCreated && (
-                <div className="my-4 text-center">User created. <br></br> Now you can{' '}
-                <Link className="underline" href={'/login'}>Login &raquo;</Link></div>
+                <div className="my-4 text-center dark:text-slate-100">User created. <br></br> Now you can{' '}
+                <Link className="underline hover:text-primary dark:hover:text-primary transition-colors" href={'/login'}>Login &raquo;</Link></div>
             )}
             {error && (
-                <div className="my-4 text-center">
+                <div className="my-4 text-center dark:text-slate-100">
                     An error has occurred.<br></br>
                     Please try again later.
                 </div>
@@ -65,15 +65,15 @@ export default function RegisterPage(){
                     disabled={creatingUser}>
                     Register
                 </button>
-                <div className="my-4 text-center text-gray-500">
+                <div className="my-4 text-center text-gray-500 dark:text-slate-400">
                     or Login with provider
                 </div>
                 <button onClick={() => signIn('google', {callbackUrl:'/'})} className="flex gap-4 justify-center">
                     <Image src={'/google.png'} alt="" width={24} height={24}></Image>
                     Login with google
                 </button>
-                <div className="text-center my-4 text-gray-500 border-t pt-4">
-                    Existing account? <Link className="underline" href={'/login'}>Login here &raquo;</Link>
+                <div className="text-center my-4 text-gray-500 dark:text-slate-400 border-t dark:border-slate-700 pt-4">
+                    Existing account? <Link className="underline hover:text-primary dark:hover:text-primary transition-colors" href={'/login'}>Login here &raquo;</Link>
                 </div>
             </form>
         </section>

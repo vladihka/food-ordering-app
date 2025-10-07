@@ -53,16 +53,16 @@ export default function MenuItem(menuItem){
                     className="fixed inset-0 bg-black/80 flex items-center justify-center">
                     <div
                         onClick={ev => ev.stopPropagation()}
-                        className="bg-white p-2 rounded-lg max-w-md  my-8">
-                        <div className="overflow-y-scroll p-2" style={{maxHeight:'calc(100vh - 100px'}}>
-                            <Image src={image} alt={name} width={300} height={200} className="mx-auto"></Image>
-                            <h2 className="text-lg font-bold text-center mb-2">{name}</h2>
-                            <p className="text-center text-gray-500 text-sm mb-2">{description}</p>
+                        className="bg-white dark:bg-slate-800 p-2 rounded-lg max-w-sm sm:max-w-md my-4 sm:my-8 mx-4 sm:mx-0">
+                        <div className="overflow-y-scroll p-2" style={{maxHeight:'calc(100vh - 100px)'}}>
+                            <Image src={image} alt={name} width={300} height={200} className="mx-auto w-full h-auto max-w-xs"></Image>
+                            <h2 className="text-lg font-bold text-center mb-2 dark:text-slate-100">{name}</h2>
+                            <p className="text-center text-gray-500 dark:text-slate-400 text-sm mb-2">{description}</p>
                             {sizes?.length > 0 && (
                                 <div className="py-2">
-                                    <h3 className="text-center text-gray-700">Pick Your size</h3>
+                                    <h3 className="text-center text-gray-700 dark:text-slate-300">Pick Your size</h3>
                                     {sizes.map((size, index) => (
-                                        <label key={index} className="flex items-center gap-2 p-4 rounded-md mb-1 border cursor-pointer hover:bg-gray-50">
+                                        <label key={index} className="flex items-center gap-2 p-4 rounded-md mb-1 border cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
                                             <input 
                                                 type="radio"
                                                 onChange={() => setSelectedSize(size)} 
@@ -79,9 +79,9 @@ export default function MenuItem(menuItem){
                             )}
                             {extraIngredientPrices?.length > 0 && (
                                 <div className="py-2">
-                                    <h3 className="text-center text-gray-700">Any extras?</h3>
+                                    <h3 className="text-center text-gray-700 dark:text-slate-300">Any extras?</h3>
                                     {extraIngredientPrices.map((extraThing, index) => (
-                                        <label key={index} className="flex items-center gap-2 p-4 rounded-md mb-1 border cursor-pointer hover:bg-gray-50">
+                                        <label key={index} className="flex items-center gap-2 p-4 rounded-md mb-1 border cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
                                             <input 
                                                 type="checkbox" 
                                                 onChange={ev => handleExtraThingClick(ev, extraThing)}
@@ -96,13 +96,13 @@ export default function MenuItem(menuItem){
                                 </div>
                             )}
                             <button 
-                                className="bg-primary text-white rounded-full px-8 py-2 sticky bottom-2 w-full" 
+                                className="bg-primary text-white rounded-full px-8 py-2 sticky bottom-2 w-full hover:bg-primary/90 transition-colors" 
                                 onClick={handleAddToCartButtonClick}
                                 type="button">
                                 Add to cart ${selectedPrice}
                             </button>
                             <button 
-                                className="mt-2 bg-gray-200 text-gray-800 rounded-full px-8 py-2 w-full" 
+                                className="mt-2 bg-gray-200 dark:bg-slate-600 text-gray-800 dark:text-slate-200 rounded-full px-8 py-2 w-full hover:bg-gray-300 dark:hover:bg-slate-500 transition-colors" 
                                 onClick={() => setShowPopup(false)}>
                                 Cancel
                             </button>

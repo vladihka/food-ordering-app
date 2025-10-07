@@ -32,11 +32,11 @@ export default function EditableImage({link, setLink}) {
         <>
             {link && (
                 <Image 
-                    className="rounded-lg w-full h-full mb-1" src={link} width={250} height={250} alt="avatar">
+                    className="rounded-lg w-full h-full mb-1 object-cover" src={link} width={250} height={250} alt="avatar">
                 </Image>
             )}
             {!link && (
-                <div className='bg-gray-200 text-center p-4 text-gray-500 rounded-lg mb-1'>
+                <div className='bg-gray-200 dark:bg-slate-800 text-center p-4 text-gray-500 dark:text-slate-400 rounded-lg mb-1'>
                     No image
                 </div>
             )}
@@ -47,7 +47,7 @@ export default function EditableImage({link, setLink}) {
                     onChange={handleFileChange}>
                 </input>
                 <span 
-                    className="border rounded-lg p-2 text-center border-gray-300 cursor-pointer block">
+                    className="border rounded-lg p-2 text-center border-gray-300 dark:border-slate-600 dark:text-slate-300 cursor-pointer block hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
                     Edit
                 </span>
             </label>

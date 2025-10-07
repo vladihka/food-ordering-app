@@ -40,7 +40,7 @@ export default function LoginPage(){
                     onChange={ev=>setPassword(ev.target.value)}>
                 </input>
                 <button disabled={loginInProgress} type="submit">Login</button>
-                <div className="my-4 text-center text-gray-500">
+                <div className="my-4 text-center text-gray-500 dark:text-slate-400">
                     or Login with provider
                 </div>
                 <button type="button" onClick={() => signIn('google', {callbackUrl:'/'})} className="flex gap-4 justify-center">
