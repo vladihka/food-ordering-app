@@ -9,8 +9,14 @@ import { useProfile } from "@/components/UseProfile";
 
 export default function CartPage(){
 
-    const {cartProducts, removeCartProduct} = useContext(CartContext)
-    const [address, setAddress] = useState({})
+    const {cartProducts, removeCartProduct, clearCart} = useContext(CartContext)
+    const [address, setAddress] = useState({
+        phone: '',
+        streetAddress: '',
+        postalCode: '',
+        city: '',
+        country: ''
+    })
     const {data:profileData} = useProfile()
 
     let total = 0
@@ -34,6 +40,20 @@ export default function CartPage(){
     
     function handleAddressChange(propName, value){
         setAddress(prevAddress => ({...prevAddress, [propName]:value}))
+    }
+
+    async function handleCheckout(ev){
+        ev.preventDefault();
+        const res = await fetch('/api/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: cartProducts, address, userEmail: profileData?.email }),
+        });
+        const data = await res.json();
+        if(data?.url){
+            // do not clear cart before redirect in case of back
+            window.location = data.url;
+        }
     }
 
     return(
@@ -90,7 +110,7 @@ export default function CartPage(){
                 </div>
                 <div className="bg-gray-100 p-4 rounded-lg">
                     <h2>Checkout</h2>
-                    <form>
+                    <form onSubmit={handleCheckout}>
                         <AddressInputs adressProps={address} setAddressProp={handleAddressChange}></AddressInputs>
                         <button type="submit">Pay ${total}</button>
                     </form>

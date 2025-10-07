@@ -50,7 +50,7 @@ export default function MenuItemPriceProps({name, addLabel, props, setProps}) {
                         <input 
                             type="text" 
                             placeholder="Size name" 
-                            value={size.name}
+                            value={size.name || ''}
                             onChange={ev => editProp(ev, index, 'name')}
                         ></input>
                     </div>
@@ -59,7 +59,7 @@ export default function MenuItemPriceProps({name, addLabel, props, setProps}) {
                         <input 
                             type="text" 
                             placeholder="Extra price" 
-                            value={size.price}
+                            value={size.price || ''}
                             onChange={ev => editProp(ev, index, 'price')}
                         ></input>
                     </div>

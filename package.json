@@ -19,6 +19,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.1",
+    "stripe": "^19.1.0",
     "uniqid": "^5.4.0"
   },
   "devDependencies": {

@@ -11,7 +11,7 @@ export default function MenuItemTile({onAddToCart, ...item}){
                 type="button"
                 onClick={onAddToCart}
                 className="mt-4 bg-primary text-white rounded-full px-8 py-2">
-                {(sizes?.lenght > 0 || extraIngredientPrices?.lenght > 0) ? (
+                {(sizes?.length > 0 || extraIngredientPrices?.length > 0) ? (
                     <span>Add to cart (from ${basePrice})</span>
                 ) : (
                     <span>Add to cart ${basePrice}</span>
